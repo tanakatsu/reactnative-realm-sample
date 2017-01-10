@@ -14,6 +14,8 @@ import * as todoActions from '../actions/todoActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+const Realm = require('realm');
+
 class Todos extends Component {
   constructor(props) {
     super(props);
@@ -24,13 +26,20 @@ class Todos extends Component {
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   }
 
+  componentDidMount() {
+    const { state, actions } = this.props;
+    if (!state.isLoaded) {
+      actions.load_items_from_realm();
+    }
+  }
+
   _onPressed() {
     const newTodo = {id: null, title: ''};
     Actions.todo_form({model: newTodo, title: 'Add new todo'});
   }
 
   render() {
-    const { state, actions } = this.props;
+    const { state } = this.props;
 
     return (
       <View style={styles.container}>

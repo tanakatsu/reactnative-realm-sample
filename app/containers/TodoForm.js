@@ -21,15 +21,6 @@ class TodoForm extends Component {
     this.state = { todo: this.props.model };
   }
 
-  onPressed() {
-    const { actions } = this.props;
-
-    // actions.delayed_increment_w_promise()
-    // .then(() => {
-    //   Actions.decrement();
-    // });
-  }
-
   _onChangeText(text) {
     this.setState({ todo: Object.assign({}, this.state.todo, { title: text }) });
   }
@@ -46,20 +37,23 @@ class TodoForm extends Component {
 
   _addItem(todo) {
     const { actions } = this.props;
-    actions.add_item(this.state.todo.title);
+
+    actions.add_item_to_realm(this.state.todo.title);
     Actions.todos();
   }
 
   _updateItem(todo) {
     const { actions } = this.props;
-    actions.update_item(todo);
+
+    actions.update_item_to_realm(todo);
     Actions.todos();
   }
 
   _deleteItem() {
     const { actions } = this.props;
+
     const todo = this.state.todo;
-    actions.delete_item(todo);
+    actions.delete_item_to_realm(todo);
     Actions.todos();
   }
 
@@ -68,7 +62,7 @@ class TodoForm extends Component {
 
     return (
       <View style={styles.container}>
-        <TextInput style={styles.textinput} onChangeText={this._onChangeText.bind(this)} value={this.state.todo.title} autoCapitalize='none' />
+        <TextInput style={styles.textinput} onChangeText={this._onChangeText.bind(this)} value={this.state.todo.title} autoCapitalize='none' autoCorrect={false} />
 
         <MyButton text='Save' onPress={this._onSubmit.bind(this)} />
         { this.state.todo.id ? <MyButton text='Delete' onPress={this._deleteItem.bind(this)} /> : null }

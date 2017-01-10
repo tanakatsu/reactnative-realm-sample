@@ -2,7 +2,8 @@ import * as types from '../actions/actionTypes';
 
 const initialState = {
   todos: [],
-  lastId: 0
+  lastId: 0,
+  isLoaded: false
 };
 
 export default function todo(state = initialState, action = {}) {
@@ -36,6 +37,18 @@ export default function todo(state = initialState, action = {}) {
       return {
         ...state,
         todos: _todos
+      };
+    case types.LOAD_ITEMS:
+      _todos = state.todos.concat(action.value);
+      const ids = _todos.map((elm) => {
+        return elm.id;
+      });
+
+      return {
+        ...state,
+        todos: _todos,
+        lastId: ids.length > 0 ? Math.max(...ids) : 0,
+        isLoaded: true
       };
     default: 
       return state;
