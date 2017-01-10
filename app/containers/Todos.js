@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
 import { View, StyleSheet, ListView, Text } from 'react-native';
