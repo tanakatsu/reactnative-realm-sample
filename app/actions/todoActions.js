@@ -1,39 +1,29 @@
 import * as types from './actionTypes';
-import realm from './realm';
-import { TodoSchema } from './realmSchema';
+import TodoModel from '../models/TodoModel';
 
-export function add_item(title) {
-  return {
-    type: types.ADD_ITEM,
-    value: title
-  }
-}
-
-export function update_item(todo) {
-  return {
-    type: types.UPDATE_ITEM,
-    value: todo
-  }
-}
-
-export function delete_item(todo) {
-  return {
-    type: types.DELETE_ITEM,
-    value: todo
-  }
-}
+// export function add_item(title) {
+//   return {
+//     type: types.ADD_ITEM,
+//     value: title
+//   }
+// }
+//
+// export function update_item(todo) {
+//   return {
+//     type: types.UPDATE_ITEM,
+//     value: todo
+//   }
+// }
+//
+// export function delete_item(todo) {
+//   return {
+//     type: types.DELETE_ITEM,
+//     value: todo
+//   }
+// }
 
 export function load_items_from_realm() {
-  const results = realm.objects('Todo');
-
-  // https://github.com/realm/realm-js/issues/323#issuecomment-197070525
-  const todos = results.map((result) => {
-    var object = {};
-    for (let property in TodoSchema.properties) {
-      object[property] = result[property];
-    }
-    return object;
-  });
+  const todos = TodoModel.load_all();
 
   return {
     type: types.LOAD_ITEMS,
@@ -44,9 +34,7 @@ export function load_items_from_realm() {
 export function add_item_to_realm(title) {
   return (dispatch, getState) => {
     const lastId = getState().todo.lastId;
-    realm.write(() => {
-      realm.create('Todo', {id: lastId + 1, title: title});
-    });
+    TodoModel.insert({id: lastId + 1, title: title});
 
     dispatch({
       type: types.ADD_ITEM,
@@ -56,18 +44,7 @@ export function add_item_to_realm(title) {
 }
 
 export function update_item_to_realm(todo) {
-  realm.write(() => {
-    const _todo = realm.objects('Todo').filtered(`id == ${todo.id}`)[0];
-    const properties = Object.keys(TodoSchema.properties).filter((elm) => {
-      if (elm === 'id') {
-        return false;
-      }
-      return true;
-    });
-    properties.forEach((p) => {
-      _todo[p] = todo[p];
-    });
-  });
+  TodoModel.update(todo);
 
   return {
     type: types.UPDATE_ITEM,
@@ -76,10 +53,7 @@ export function update_item_to_realm(todo) {
 }
 
 export function delete_item_to_realm(todo) {
-  realm.write(() => {
-    const _todo = realm.objects('Todo').filtered(`id == ${todo.id}`)[0];
-    realm.delete(_todo);
-  });
+  TodoModel.destroy(todo.id);
 
   return {
     type: types.DELETE_ITEM,
