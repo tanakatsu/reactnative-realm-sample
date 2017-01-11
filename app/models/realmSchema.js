@@ -1,4 +1,4 @@
-export const TodoSchema = {
+const TodoSchema = {
   name: 'Todo',
   primaryKey: 'id',
   properties: {
@@ -6,3 +6,4 @@ export const TodoSchema = {
     title: 'string'
   }
 };
+export { TodoSchema };

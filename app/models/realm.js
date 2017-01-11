@@ -1,4 +1,5 @@
 import { TodoSchema } from './realmSchema';
 const Realm = require('realm');
 
-export default new Realm({schema: [TodoSchema]});
+const realm = new Realm({schema: [TodoSchema]});
+export default realm;
