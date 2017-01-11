@@ -8,8 +8,6 @@ import * as todoActions from '../actions/todoActions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-const Realm = require('realm');
-
 class Todos extends Component {
   constructor(props) {
     super(props);
